@@ -6,10 +6,11 @@
 #ifdef CONFIG_WIRELESS
   #include <dt-bindings/zmk/bt.h>
   #include <dt-bindings/zmk/outputs.h>
-  #define _BT_SEL_KEYS_                                                        \
-      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_CLR
+  #define _SYS_LT_KEYS_ &bhold &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3
+  #define _SYS_RT_KEYS_ &bt BT_SEL 4 &bt BT_CLR ___ ___ &bhold
 #else
-  #define _BT_SEL_KEYS_ &trans &trans &trans &trans &trans
+  #define _SYS_LT_KEYS_ &bhold ___ ___ ___ ___
+  #define _SYS_RT_KEYS_ ___ ___ ___ ___ &bhold
 #endif
 
 #define DEF 0
@@ -129,6 +130,17 @@ ZMK_TRI_STATE(
 
 /* Custom behaviors */
 
+/ {
+  behaviors {
+    bhold: bootloader_hold {
+      compatible = "zmk,behavior-long-press";
+      #binding-cells = <0>;
+      duration-ms = <2000>;
+      bindings = <&bootloader>;
+    };
+  };
+};
+
 // Alt+Tab swapper, requires tri-state module.
 ZMK_TRI_STATE(swapper, bindings = <&kt LALT>, <&kp TAB>, <&kt LALT>;
               ignored-key-positions = <LT2 RT2 RM1 RM2 RM3>;)
@@ -239,9 +251,9 @@ ZMK_BASE_LAYER(Num,
 
 ZMK_BASE_LAYER(Sys,
 //╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮ ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-                               _BT_SEL_KEYS_                            ,   ___           ___           ___           ___           ___         ,
+                               _SYS_LT_KEYS_                            ,                                _SYS_RT_KEYS_                            ,
 //├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-    ___           ___           ___           ___           &bootloader ,   &bootloader   ___           ___           ___           ___         ,
+    ___           ___           ___           ___           ___         ,   ___           ___           ___           ___           ___         ,
 //├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
     ___           ___           ___           ___           &sys_reset  ,   &sys_reset    ___           ___           ___           ___         ,
 //╰─────────────┼─────────────┴─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┴───────────────────────────╯
