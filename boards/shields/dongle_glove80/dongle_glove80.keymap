@@ -1,0 +1,3 @@
+// The dongle runs the Glove80's own keymap. Its shield name does not start with
+// glove80 (see Kconfig.shield), so ZMK cannot find that keymap on its own.
+#include "../../../config/glove80.keymap"

@@ -18,3 +18,39 @@ include:
   - board: corneish_zen_right@2.0.0//zmk
   - board: glove80_lh
   - board: glove80_rh
+
+  # ---- Dongle mode (PandaKB USB dongle as central) ---------------------------
+  # Only the wireless splits get one; the Planck is wired-only, with no radio.
+  # Each right half is a peripheral in both modes, so its build above serves
+  # both. See "Dongle mode" in readme.md.
+  - board: nice_nano@2.0.0//zmk
+    shield: dongle_corneish_zen pandakb_dongle dongle_display
+    artifact-name: corneish_zen_dongle
+  # Left half rebuilt as a peripheral. Its screen also switches to the right
+  # half's widget set, since the output widget only builds on a central.
+  - board: corneish_zen_left@2.0.0//zmk
+    cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n -DCONFIG_CUSTOM_WIDGET_OUTPUT_STATUS=n -DCONFIG_CUSTOM_WIDGET_PERIPHERAL_STATUS=y
+    artifact-name: corneish_zen_left_dongle_mode
+  - board: nice_nano@2.0.0//zmk
+    shield: dongle_glove80 pandakb_dongle dongle_display
+    artifact-name: glove80_dongle
+  - board: glove80_lh
+    cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+    artifact-name: glove80_lh_dongle_mode
+
+  # Settings resets, needed to clear old pairings when switching modes.
+  - board: nice_nano@2.0.0//zmk
+    shield: settings_reset
+    artifact-name: settings_reset_dongle
+  - board: corneish_zen_left@2.0.0//zmk
+    shield: settings_reset
+    artifact-name: settings_reset_corneish_zen_left
+  - board: corneish_zen_right@2.0.0//zmk
+    shield: settings_reset
+    artifact-name: settings_reset_corneish_zen_right
+  - board: glove80_lh
+    shield: settings_reset
+    artifact-name: settings_reset_glove80_lh
+  - board: glove80_rh
+    shield: settings_reset
+    artifact-name: settings_reset_glove80_rh

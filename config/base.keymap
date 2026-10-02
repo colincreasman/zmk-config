@@ -8,9 +8,13 @@
   #include <dt-bindings/zmk/outputs.h>
   #define _SYS_LT_KEYS_ &bhold &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3
   #define _SYS_RT_KEYS_ &bt BT_SEL 4 &bt BT_CLR ___ ___ &bhold
+  // Bootloads the split central: the USB dongle in dongle mode. It sits under
+  // T (which holds BT_SEL 3 here), on the inner column between the pinky holds.
+  #define _SYS_DONGLE_KEY_ &bhold_dongle
 #else
   #define _SYS_LT_KEYS_ &bhold ___ ___ ___ ___
   #define _SYS_RT_KEYS_ ___ ___ ___ ___ &bhold
+  #define _SYS_DONGLE_KEY_ ___
 #endif
 
 #define DEF 0
@@ -138,6 +142,18 @@ ZMK_TRI_STATE(
       duration-ms = <2000>;
       bindings = <&bootloader>;
     };
+
+    // Same 2s hold, retargeted at the split central via `central`. With a USB
+    // dongle that is the keyless dongle, which otherwise can only reach its UF2
+    // bootloader by opening its case. Standalone, the central is the left half,
+    // so this just duplicates the left hold.
+    bhold_dongle: bootloader_hold_dongle {
+      compatible = "zmk,behavior-long-press";
+      #binding-cells = <0>;
+      duration-ms = <2000>;
+      bindings = <&bootloader>;
+      central;
+    };
   };
 };
 
@@ -253,7 +269,7 @@ ZMK_BASE_LAYER(Sys,
 //╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮ ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
                                _SYS_LT_KEYS_                            ,                                _SYS_RT_KEYS_                            ,
 //├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-    ___           ___           ___           ___           ___         ,   ___           ___           ___           ___           ___         ,
+    ___           ___           ___           ___           _SYS_DONGLE_KEY_,   ___           ___           ___           ___           ___         ,
 //├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
     ___           ___           ___           ___           &sys_reset  ,   &sys_reset    ___           ___           ___           ___         ,
 //╰─────────────┼─────────────┴─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┴───────────────────────────╯
