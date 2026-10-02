@@ -1,0 +1,3 @@
+// The dongle runs the Zen's own keymap. Its shield name does not start with
+// corneish_zen (see Kconfig.shield), so ZMK cannot find that keymap on its own.
+#include "../../../config/corneish_zen.keymap"

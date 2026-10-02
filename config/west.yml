@@ -26,6 +26,8 @@ manifest:
       url-base: https://github.com/urob
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    - name: englmaxi
+      url-base: https://github.com/englmaxi
 
   projects:
     - name: zmk
@@ -52,6 +54,11 @@ manifest:
     - name: zmk-unicode
       path: modules/zmk/unicode
       revision: 1a6dbc797a46c4a61c3c71a7a9d013a5d5aee49e # main (4/19/2026)
+    # Status screen for the PandaKB USB dongle's OLED (dongle builds only).
+    - name: zmk-dongle-display
+      remote: englmaxi
+      path: modules/zmk/dongle-display
+      revision: 2bb333f87136d33e94a49d86236ed9ec254a8060 # main (2/13/2026)
 
     # Only source necessary Zephyr modules. Remove this entire section to restore
     # the default (needed for less common hardware).

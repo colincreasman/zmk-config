@@ -1,0 +1,8 @@
+# Keyless central for the Corne-ish Zen, for running it through a USB dongle.
+#
+# Deliberately not named `corneish_zen_dongle`: ZMK applies config/<name>.conf
+# for every prefix of a shield's name, and config/corneish_zen.conf sets an
+# option that only exists on the Zen's own boards (which Zephyr rejects on any
+# other board) and enables deep sleep (which would strand a keyless dongle).
+config SHIELD_DONGLE_CORNEISH_ZEN
+    def_bool $(shields_list_contains,dongle_corneish_zen)

@@ -455,3 +455,34 @@ remaining issues:
     many of the benefits that make Nix uniquely powerful. A better approach,
     though beyond the scope of this document, is to use `home-manager` to
     maintain your user environment.
+
+## Dongle mode (PandaKB USB dongle)
+
+The two wireless splits, the Corne-ish Zen and the Glove80, can also run through
+[PandaKB's ZMK dongle](https://pandakb.com/shop/keyboard-kit/pandakb-zmk-split-keyboard-dongle/) (a nice!nano v2
+with a 1.3" OLED). The dongle becomes the split **central** and both halves become its **peripherals**: plug it
+into a computer and the keyboard just works over USB, with no Bluetooth pairing on that computer. ZMK fixes each
+part's role at build time, so in dongle mode the halves cannot connect to a computer without the dongle, and
+switching modes means reflashing. The Planck is wired-only, so it has no dongle build.
+
+| Artifact | Flash to |
+|---|---|
+| `corneish_zen_dongle` / `glove80_dongle` | dongle |
+| `corneish_zen_left_dongle_mode` / `glove80_lh_dongle_mode` | left half |
+| the usual right-half build | right half (a peripheral in both modes) |
+| `settings_reset_dongle`, `settings_reset_<board>` | each device, before switching modes |
+
+**One-time setup:** turn off other ZMK keyboards nearby, flash each device's settings reset (old pairings must be
+cleared first), then flash the dongle-mode firmware, plug in the dongle, and power on both halves.
+
+- Keymap changes then only need the **dongle** reflashed. To reach its bootloader without opening its case, hold
+  the Sys layer and hold the key under `T` (left home row, inner column) for 2 seconds.
+- The dongle shields are named `dongle_corneish_zen` and `dongle_glove80` rather than `<board>_dongle`, because
+  ZMK applies `config/<prefix>.conf` for every prefix of a shield's name. The board configs set an option that
+  only exists on the Zen's boards (which Zephyr rejects elsewhere) and enable deep sleep, which would strand a
+  keyless dongle. Each dongle shield therefore has its own `.conf`, plus a one-line keymap that includes the
+  board's keymap.
+- Their layouts and transforms are verbatim copies of the board definitions at the ZMK revision pinned in
+  `config/west.yml`; re-check them whenever that pin moves.
+- In dongle mode the Corne-ish Zen's left screen switches to the right half's widgets, since the output widget
+  only builds on a central.

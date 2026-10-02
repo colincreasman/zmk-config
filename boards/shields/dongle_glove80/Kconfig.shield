@@ -1,0 +1,8 @@
+# Keyless central for the Glove80, for running it through a USB dongle.
+#
+# Deliberately not named `glove80_dongle`: ZMK applies config/<name>.conf for
+# every prefix of a shield's name, and config/glove80.conf enables deep sleep
+# (which would strand a keyless dongle) and caps connections at 3 (too few once
+# both halves are peripherals).
+config SHIELD_DONGLE_GLOVE80
+    def_bool $(shields_list_contains,dongle_glove80)
